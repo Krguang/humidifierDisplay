@@ -56,14 +56,17 @@
 
 /* USER CODE BEGIN Includes */
 
-#include "white12864.h"
+#include "hal_key.h"
 
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
 
 /* USER CODE BEGIN PV */
+
 /* Private variables ---------------------------------------------------------*/
+
+
 
 /* USER CODE END PV */
 
@@ -202,6 +205,11 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
 /* USER CODE BEGIN Callback 1 */
+
+  if (htim->Instance == TIM3)
+  {
+	  keyHandle((keysTypedef_t *)&keys);
+  }
 
 /* USER CODE END Callback 1 */
 }
