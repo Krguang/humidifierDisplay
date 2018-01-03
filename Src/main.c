@@ -110,16 +110,6 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 
-  init_lcd();
-  clear_screen();
-
-  display_string_5x8(1, 1, "O2 :479 L:300  H:700");
-  display_string_5x8(2, 1, "CO2:479 L:300  H:700");
-  display_string_5x8(3, 1, "N2 :479 L:300  H:700");
-  display_string_5x8(4, 1, "NO :479 L:300  H:700");
-  display_string_5x8(5, 1, "CA :479 L:300  H:700");
-  display_string_5x8(6, 1, "AR :479 L:300  H:700");
-  display_string_5x8(7, 1, "NP :-50 L:-100 H:-20");
   /* USER CODE END 2 */
 
   /* Call init function for freertos objects (in freertos.c) */

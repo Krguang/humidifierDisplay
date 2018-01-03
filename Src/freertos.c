@@ -54,23 +54,29 @@
 /* USER CODE BEGIN Includes */     
 #include "gpio.h"
 #include "white12864.h"
+#include "usart.h"
+#include "modbusSlave.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
-osThreadId displayTaskHandle;
-osThreadId communicationTaHandle;
+osThreadId initTaskHandle;
 
 /* USER CODE BEGIN Variables */
+
+osThreadId getDataTaskHandle;
+osThreadId modbusTaskHandle;
 
 /* USER CODE END Variables */
 
 /* Function prototypes -------------------------------------------------------*/
-void StartDidplayTask(void const * argument);
-void StartCommunicationTask(void const * argument);
+void StartInitTask(void const * argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 /* USER CODE BEGIN FunctionPrototypes */
+
+void StartGetDataTask(void const * argument);
+void StartModbusTask(void const * argument);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -80,70 +86,81 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 void MX_FREERTOS_Init(void) {
   /* USER CODE BEGIN Init */
-       
+
   /* USER CODE END Init */
 
   /* USER CODE BEGIN RTOS_MUTEX */
-  /* add mutexes, ... */
+	/* add mutexes, ... */
   /* USER CODE END RTOS_MUTEX */
 
   /* USER CODE BEGIN RTOS_SEMAPHORES */
-  /* add semaphores, ... */
+	/* add semaphores, ... */
   /* USER CODE END RTOS_SEMAPHORES */
 
   /* USER CODE BEGIN RTOS_TIMERS */
-  /* start timers, add new ones, ... */
+	/* start timers, add new ones, ... */
   /* USER CODE END RTOS_TIMERS */
 
   /* Create the thread(s) */
-  /* definition and creation of displayTask */
-  osThreadDef(displayTask, StartDidplayTask, osPriorityNormal, 0, 128);
-  displayTaskHandle = osThreadCreate(osThread(displayTask), NULL);
-
-  /* definition and creation of communicationTa */
-  osThreadDef(communicationTa, StartCommunicationTask, osPriorityNormal, 0, 128);
-  communicationTaHandle = osThreadCreate(osThread(communicationTa), NULL);
+  /* definition and creation of initTask */
+  osThreadDef(initTask, StartInitTask, osPriorityNormal, 0, 128);
+  initTaskHandle = osThreadCreate(osThread(initTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+	/* add threads, ... */
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_QUEUES */
-  /* add queues, ... */
+	/* add queues, ... */
   /* USER CODE END RTOS_QUEUES */
 }
 
-/* StartDidplayTask function */
-void StartDidplayTask(void const * argument)
+/* StartInitTask function */
+void StartInitTask(void const * argument)
 {
 
-  /* USER CODE BEGIN StartDidplayTask */
-  /* Infinite loop */
-  for(;;)
-  {
-	  //HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-	 // HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
-	  HAL_GPIO_WritePin(LCD_LEDA_GPIO_Port, LCD_LEDA_Pin, GPIO_PIN_RESET);
+  /* USER CODE BEGIN StartInitTask */
+ 
+	init_lcd();
+	clear_screen();
 
-    osDelay(50);
-  }
-  /* USER CODE END StartDidplayTask */
-}
+	display_string_5x8(1, 1, "O2 :479 L:300  H:700");
+	display_string_5x8(2, 1, "CO2:479 L:300  H:700");
+	display_string_5x8(3, 1, "N2 :479 L:300  H:700");
+	display_string_5x8(4, 1, "NO :479 L:300  H:700");
+	display_string_5x8(5, 1, "CA :479 L:300  H:700");
+	display_string_5x8(6, 1, "AR :479 L:300  H:700");
+	display_string_5x8(7, 1, "NP :-50 L:-100 H:-20");
 
-/* StartCommunicationTask function */
-void StartCommunicationTask(void const * argument)
-{
-  /* USER CODE BEGIN StartCommunicationTask */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END StartCommunicationTask */
+	osThreadDef(getDataTask, StartGetDataTask, osPriorityNormal, 0, 128);
+	getDataTaskHandle = osThreadCreate(osThread(getDataTask), NULL);
+
+	osThreadDef(modbusTask, StartModbusTask, osPriorityNormal, 0, 128);
+	modbusTaskHandle = osThreadCreate(osThread(modbusTask), NULL);
+
+	osThreadTerminate(initTaskHandle);
+
+  /* USER CODE END StartInitTask */
 }
 
 /* USER CODE BEGIN Application */
-     
+
+void StartGetDataTask(void const * argument) {
+	for (;;)
+	{
+		osDelay(500);
+		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+	}
+}
+
+void StartModbusTask(void const * argument) {
+	for (;;)
+	{
+		osDelay(10);
+		modbusSlave();
+	}
+}
+
 /* USER CODE END Application */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

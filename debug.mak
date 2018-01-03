@@ -17,7 +17,7 @@ CFLAGS := -ggdb -ffunction-sections -O0
 CXXFLAGS := -ggdb -ffunction-sections -fno-exceptions -fno-rtti -O0
 ASFLAGS := 
 LDFLAGS := -Wl,-gc-sections
-COMMONFLAGS := 
+COMMONFLAGS := -fstack-usage
 LINKER_SCRIPT := 
 
 START_GROUP := -Wl,--start-group

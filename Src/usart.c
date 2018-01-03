@@ -54,6 +54,10 @@
 
 /* USER CODE BEGIN 0 */
 
+uint16_t localArray[256];
+struct buffer Usart1ReceiveBuffer;
+volatile uint8_t Usart1ReceiveState = 0;
+
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
@@ -64,7 +68,7 @@ void MX_USART1_UART_Init(void)
 {
 
   huart1.Instance = USART1;
-  huart1.Init.BaudRate = 115200;
+  huart1.Init.BaudRate = 19200;
   huart1.Init.WordLength = UART_WORDLENGTH_8B;
   huart1.Init.StopBits = UART_STOPBITS_1;
   huart1.Init.Parity = UART_PARITY_NONE;
@@ -109,6 +113,9 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     HAL_NVIC_EnableIRQ(USART1_IRQn);
   /* USER CODE BEGIN USART1_MspInit 1 */
 
+	__HAL_UART_ENABLE_IT(&huart1, UART_IT_RXNE);
+	__HAL_UART_ENABLE_IT(&huart1, UART_IT_IDLE);
+
   /* USER CODE END USART1_MspInit 1 */
   }
 }
@@ -139,6 +146,26 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
 } 
 
 /* USER CODE BEGIN 1 */
+
+void USART1_IRQHandler(void)
+{
+	uint8_t Clear = Clear;
+
+
+	if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_RXNE) != RESET)
+	{
+		Usart1ReceiveBuffer.BufferArray[Usart1ReceiveBuffer.BufferLen++] = huart1.Instance->DR;
+	}
+
+	if (__HAL_UART_GET_FLAG(&huart1, UART_FLAG_IDLE) != RESET)
+	{
+		Clear = huart1.Instance->SR;
+		Clear = huart1.Instance->DR;
+		Usart1ReceiveState = 1;
+		HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+	}
+
+}
 
 /* USER CODE END 1 */
 

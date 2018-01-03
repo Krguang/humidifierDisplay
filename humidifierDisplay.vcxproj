@@ -81,6 +81,7 @@
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\gpio.c" />
     <ClCompile Include="Src\main.c" />
+    <ClCompile Include="Src\modbusSlave.c" />
     <ClCompile Include="Src\stm32f1xx_hal_msp.c" />
     <ClCompile Include="Src\stm32f1xx_hal_timebase_TIM.c" />
     <ClCompile Include="Src\stm32f1xx_it.c" />
@@ -88,6 +89,7 @@
     <ClCompile Include="Src\tim.c" />
     <ClCompile Include="Src\usart.c" />
     <ClCompile Include="Src\white12864.c" />
+    <ClInclude Include="Inc\modbusSlave.h" />
     <ClInclude Include="Inc\white12864.h" />
     <None Include="stm32.mak" />
     <ClCompile Include="$(BSP_ROOT)\STM32F1xxxx\StartupFiles\startup_stm32f103xb.c" />
