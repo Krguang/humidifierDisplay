@@ -56,7 +56,6 @@
 
 /* USER CODE BEGIN Includes */
 
-#include "hal_key.h"
 
 /* USER CODE END Includes */
 
@@ -208,7 +207,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 
   if (htim->Instance == TIM3)
   {
-	  keyHandle((keysTypedef_t *)&keys);
+	  
   }
 
 /* USER CODE END Callback 1 */

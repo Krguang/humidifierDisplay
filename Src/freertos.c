@@ -56,7 +56,6 @@
 #include "white12864.h"
 #include "usart.h"
 #include "modbusSlave.h"
-#include "hal_key.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -66,6 +65,7 @@ osThreadId initTaskHandle;
 
 osThreadId getDataTaskHandle;
 osThreadId modbusTaskHandle;
+osThreadId checkKeyPressedHandle;
 
 /* USER CODE END Variables */
 
@@ -78,6 +78,7 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
 void StartGetDataTask(void const * argument);
 void StartModbusTask(void const * argument);
+void StartCheckKeyPressedTask(void const * argument);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -122,7 +123,6 @@ void StartInitTask(void const * argument)
 
   /* USER CODE BEGIN StartInitTask */
  
-	keyInit();
 	init_lcd();
 	clear_screen();
 	/*
@@ -144,6 +144,10 @@ void StartInitTask(void const * argument)
 	osThreadDef(modbusTask, StartModbusTask, osPriorityNormal, 0, 128);
 	modbusTaskHandle = osThreadCreate(osThread(modbusTask), NULL);
 
+	osThreadDef(checkKeyPressedTask, StartCheckKeyPressedTask, osPriorityNormal, 0, 128);
+	checkKeyPressedHandle = osThreadCreate(osThread(checkKeyPressedTask), NULL);
+
+
 	osThreadTerminate(initTaskHandle);
 
   /* USER CODE END StartInitTask */
@@ -154,7 +158,8 @@ void StartInitTask(void const * argument)
 void StartGetDataTask(void const * argument) {
 	for (;;)
 	{
-		osDelay(500);
+		
+		osDelay(50);
 	}
 }
 
@@ -163,6 +168,14 @@ void StartModbusTask(void const * argument) {
 	{
 		osDelay(10);
 		modbusSlave();
+	}
+}
+
+void StartCheckKeyPressedTask(void const * argument) {
+	for (;;)
+	{
+		osDelay(50);
+		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 	}
 }
 
