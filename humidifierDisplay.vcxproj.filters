@@ -642,12 +642,18 @@
     <ClCompile Include="Src\modbusSlave.c">
       <Filter>Source files\Src</Filter>
     </ClCompile>
+    <ClCompile Include="Src\hal_key.c">
+      <Filter>Source files\Src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Inc\white12864.h">
       <Filter>Header files\Inc</Filter>
     </ClInclude>
     <ClInclude Include="Inc\modbusSlave.h">
+      <Filter>Header files\Inc</Filter>
+    </ClInclude>
+    <ClInclude Include="Inc\hal_key.h">
       <Filter>Header files\Inc</Filter>
     </ClInclude>
   </ItemGroup>

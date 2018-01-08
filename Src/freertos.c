@@ -56,6 +56,7 @@
 #include "white12864.h"
 #include "usart.h"
 #include "modbusSlave.h"
+#include "hal_key.h"
 /* USER CODE END Includes */
 
 /* Variables -----------------------------------------------------------------*/
@@ -66,6 +67,9 @@ osThreadId initTaskHandle;
 osThreadId getDataTaskHandle;
 osThreadId modbusTaskHandle;
 osThreadId checkKeyPressedHandle;
+osThreadId keyPressedHandle;
+
+osSemaphoreId keyPressedBinSemHandle;
 
 /* USER CODE END Variables */
 
@@ -79,6 +83,7 @@ void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 void StartGetDataTask(void const * argument);
 void StartModbusTask(void const * argument);
 void StartCheckKeyPressedTask(void const * argument);
+void StartKeyPressedTask(void const * argument);
 
 /* USER CODE END FunctionPrototypes */
 
@@ -125,6 +130,7 @@ void StartInitTask(void const * argument)
  
 	init_lcd();
 	clear_screen();
+	keyInit();
 	/*
 	display_string_5x8(1, 1, "O2 :479 L:300  H:700");
 	display_string_5x8(2, 1, "CO2:479 L:300  H:700");
@@ -146,6 +152,12 @@ void StartInitTask(void const * argument)
 
 	osThreadDef(checkKeyPressedTask, StartCheckKeyPressedTask, osPriorityNormal, 0, 128);
 	checkKeyPressedHandle = osThreadCreate(osThread(checkKeyPressedTask), NULL);
+
+	osThreadDef(keyPressedTask, StartKeyPressedTask, osPriorityNormal, 0, 128);
+	keyPressedHandle = osThreadCreate(osThread(keyPressedTask), NULL);
+
+	osSemaphoreDef(keyPressedBinSem);
+	keyPressedBinSemHandle = osSemaphoreCreate(osSemaphore(keyPressedBinSem), 1);
 
 
 	osThreadTerminate(initTaskHandle);
@@ -172,10 +184,39 @@ void StartModbusTask(void const * argument) {
 }
 
 void StartCheckKeyPressedTask(void const * argument) {
+	//static uint16_t count = 0;
 	for (;;)
 	{
+		/*
+		if (HAL_GPIO_ReadPin(KEY1_GPIO_Port, KEY1_Pin) == GPIO_PIN_RESET)
+		{
+			//key0Pressed = 1;
+			count++;
+
+		}
+		else
+		{
+			//key0Pressed = 0;
+			count = 0;
+		}
+		if (count > 20)
+		{
+			count = 0;
+			osSemaphoreRelease(keyPressedBinSemHandle);
+		}
+		*/
+		osDelay(5);
+		keyHandle((keysTypedef_t *)&keys);
+	}
+}
+
+void StartKeyPressedTask(void const * argument) {
+	//osSemaphoreWait(keyPressedBinSemHandle, 0);
+	for (;;)
+	{
+		//osSemaphoreWait(keyPressedBinSemHandle, osWaitForever);
+		//HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 		osDelay(50);
-		HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 	}
 }
 

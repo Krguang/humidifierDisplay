@@ -251,17 +251,17 @@ void key1ShortPress(void)
 
 void key2ShortPress(void)
 {
-
+	HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 }
 
 void key3ShortPress(void)
 {
-
+	HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 }
 
 void key4ShortPress(void)
 {
-
+	HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
 }
 
 void keyInit(void)
