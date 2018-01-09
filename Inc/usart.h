@@ -65,7 +65,7 @@ extern UART_HandleTypeDef huart1;
 
 /* USER CODE BEGIN Private defines */
 
-uint16_t localArray[];
+
 extern volatile uint8_t Usart1ReceiveState;
 
 struct buffer {									//定义接收缓存结构体

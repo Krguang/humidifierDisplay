@@ -20,6 +20,7 @@
 #include "hal_key.h"
 #include <math.h>
 #include <usart.h>
+#include "dataProcessing.h"
 
 uint8_t                 keyCountTime;
 static uint8_t          keyTotolNum = 0;
@@ -246,22 +247,49 @@ void keyParaInit(keysTypedef_t *keys)
 void key1ShortPress(void)
 {
 	HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
-	HAL_UART_Transmit(&huart1, "press1\n", 8, 0xff);
+	if (key[0] == 0)
+	{
+		key[0] = 1;
+	}
+	else {
+		key[0] = 0;
+	}
 }
 
 void key2ShortPress(void)
 {
 	HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+	if (key[1] == 0)
+	{
+		key[1] = 1;
+	}
+	else {
+		key[1] = 0;
+	}
 }
 
 void key3ShortPress(void)
 {
 	HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+	if (key[2] == 0)
+	{
+		key[2] = 1;
+	}
+	else {
+		key[2] = 0;
+	}
 }
 
 void key4ShortPress(void)
 {
 	HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
+	if (key[3] == 0)
+	{
+		key[3] = 1;
+	}
+	else {
+		key[3] = 0;
+	}
 }
 
 void keyInit(void)

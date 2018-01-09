@@ -54,7 +54,7 @@
 
 /* USER CODE BEGIN 0 */
 
-uint16_t localArray[256];
+
 struct buffer Usart1ReceiveBuffer;
 volatile uint8_t Usart1ReceiveState = 0;
 

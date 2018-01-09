@@ -78,6 +78,8 @@
   </ImportGroup>
   <ItemGroup />
   <ItemGroup>
+    <ClCompile Include="Src\dataProcessing.c" />
+    <ClCompile Include="Src\display.c" />
     <ClCompile Include="Src\freertos.c" />
     <ClCompile Include="Src\gpio.c" />
     <ClCompile Include="Src\hal_key.c" />
@@ -90,6 +92,8 @@
     <ClCompile Include="Src\tim.c" />
     <ClCompile Include="Src\usart.c" />
     <ClCompile Include="Src\white12864.c" />
+    <ClInclude Include="Inc\dataProcessing.h" />
+    <ClInclude Include="Inc\display.h" />
     <ClInclude Include="Inc\hal_key.h" />
     <ClInclude Include="Inc\modbusSlave.h" />
     <ClInclude Include="Inc\white12864.h" />

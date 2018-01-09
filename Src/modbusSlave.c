@@ -1,5 +1,6 @@
 #include "modbusSlave.h"
 #include "usart.h"
+#include "dataProcessing.h"
 
 uint8_t slaveAdd = 1;
 
