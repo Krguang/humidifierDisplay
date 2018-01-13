@@ -5,6 +5,7 @@ uint16_t localArray[256];
 
 uint16_t humiCurrent;
 uint16_t humiOpening;
+uint16_t powerProportion;
 
 void dataProcessing() {
 	if (key[0]==0)
@@ -41,4 +42,5 @@ void dataProcessing() {
 
 	humiCurrent = localArray[5];
 	humiOpening = localArray[6];
+	powerProportion = localArray[7];
 }

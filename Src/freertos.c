@@ -152,6 +152,7 @@ void StartInitTask(void const * argument)
 void StartGetDataTask(void const * argument) {
 	for (;;)
 	{
+		printf("key4 value = %d\n", HAL_GPIO_ReadPin(KEY4_GPIO_Port, KEY4_Pin));
 		dataProcessing();
 		display();
 		osDelay(10);

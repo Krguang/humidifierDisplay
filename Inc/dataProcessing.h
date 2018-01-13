@@ -7,4 +7,5 @@ extern uint16_t localArray[];
 
 extern uint16_t humiCurrent;
 extern uint16_t humiOpening;
+extern uint16_t powerProportion;
 void dataProcessing();

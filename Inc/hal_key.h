@@ -24,7 +24,7 @@
 #define G_IS_BIT_SET(a,b)                         (a & (1 << b))
 
 #define KEY_TIMER_MS                            5
-#define KEY_MAX_NUMBER                          4
+#define KEY_MAX_NUMBER                          5
 #define DEBOUNCE_TIME                           30
 #define PRESS_LONG_TIME                         3000
 
