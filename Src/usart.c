@@ -53,7 +53,7 @@
 #include "gpio.h"
 
 /* USER CODE BEGIN 0 */
-
+#include "display.h"
 
 struct buffer Usart1ReceiveBuffer;
 volatile uint8_t Usart1ReceiveState = 0;
@@ -168,7 +168,15 @@ void USART1_IRQHandler(void)
 		Clear = huart1.Instance->SR;
 		Clear = huart1.Instance->DR;
 		Usart1ReceiveState = 1;
-		HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+		if (powerOn == 1)
+		{
+			HAL_GPIO_TogglePin(LED2_GPIO_Port, LED2_Pin);
+		}
+		else
+		{
+			HAL_GPIO_WritePin(LED2_GPIO_Port, LED2_Pin, GPIO_PIN_RESET);
+		}
+		
 	}
 
 }

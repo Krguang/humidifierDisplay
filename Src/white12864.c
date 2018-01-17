@@ -158,6 +158,21 @@ void display_graphic_16x16(uint8_t page, uint8_t column, uint8_t reverse, uint8_
 	}
 }
 
+void display_graphic_16x32(uint8_t page, uint8_t column, const uint8_t *dp)
+{
+	uint8_t i, j;
+	for (j = 0; j<4; j++)
+	{
+		lcd_address(page + j, column);
+		for (i = 0; i<16; i++)
+		{
+			write_data(*dp); //写数据到 LCD,每写完一个 8 位的数据后列地址自动加 1
+			dp++;
+		}
+	}
+}
+
+
 //送指令到晶联讯字库IC
 void send_command_to_ROM(uint8_t datu)
 {
@@ -196,7 +211,7 @@ static uint8_t get_data_from_ROM()
 }
 
 //从指定地址读出数据写到液晶屏指定（page,column)座标中
-void get_and_write_16x16(ulong fontaddr, uint8_t page, uint8_t column)
+void get_and_write_16x16(ulong fontaddr, uint8_t page, uint8_t reverse, uint8_t column)
 {
 	uint8_t i, j, disp_data;
 	rom_cs_low;
@@ -210,7 +225,15 @@ void get_and_write_16x16(ulong fontaddr, uint8_t page, uint8_t column)
 		for (i = 0; i<16; i++)
 		{
 			disp_data = get_data_from_ROM();
-			write_data(disp_data);	//写数据到LCD,每写完1字节的数据后列地址自动加1
+			if (reverse == 1)
+			{
+				write_data(disp_data);	//写数据到LCD,每写完1字节的数据后列地址自动加1
+			}
+			else
+			{
+				write_data(~disp_data);	//写数据到LCD,每写完1字节的数据后列地址自动加1
+			}
+			
 		}
 	}
 	rom_cs_high;
@@ -218,7 +241,7 @@ void get_and_write_16x16(ulong fontaddr, uint8_t page, uint8_t column)
 
 
 //从指定地址读出数据写到液晶屏指定（page,column)座标中
-void get_and_write_8x16(ulong fontaddr, uint8_t page, uint8_t column)
+void get_and_write_8x16(ulong fontaddr, uint8_t page, uint8_t reverse, uint8_t column)
 {
 	uint8_t i, j, disp_data;
 	rom_cs_low;
@@ -232,7 +255,14 @@ void get_and_write_8x16(ulong fontaddr, uint8_t page, uint8_t column)
 		for (i = 0; i<8; i++)
 		{
 			disp_data = get_data_from_ROM();
-			write_data(disp_data);	//写数据到LCD,每写完1字节的数据后列地址自动加1
+			if (reverse == 1)
+			{
+				write_data(disp_data);	//写数据到LCD,每写完1字节的数据后列地址自动加1
+			}
+			else
+			{
+				write_data(~disp_data);	//写数据到LCD,每写完1字节的数据后列地址自动加1
+			}
 		}
 	}
 	rom_cs_high;
@@ -282,7 +312,7 @@ void display_string_5x8(uint8_t page, uint8_t column, uint8_t *text)
 }
 
 
-void display_GB2312_string(uint8_t page, uint8_t column, uint8_t *text)
+void display_GB2312_string(uint8_t page, uint8_t column, uint8_t reverse, uint8_t *text)
 {
 	uint8_t i = 0;
 	while ((text[i]>0x00))
@@ -296,7 +326,7 @@ void display_GB2312_string(uint8_t page, uint8_t column, uint8_t *text)
 			fontaddr += (text[i + 1] - 0xa1) + 846;
 			fontaddr = (ulong)(fontaddr * 32);
 
-			get_and_write_16x16(fontaddr, page, column);	 //从指定地址读出数据写到液晶屏指定（page,column)座标中
+			get_and_write_16x16(fontaddr, page, reverse, column);	 //从指定地址读出数据写到液晶屏指定（page,column)座标中
 			i += 2;
 			column += 16;
 		}
@@ -309,7 +339,7 @@ void display_GB2312_string(uint8_t page, uint8_t column, uint8_t *text)
 			fontaddr += (text[i + 1] - 0xa1);
 			fontaddr = (ulong)(fontaddr * 32);
 
-			get_and_write_16x16(fontaddr, page, column);	 //从指定地址读出数据写到液晶屏指定（page,column)座标中
+			get_and_write_16x16(fontaddr, page, reverse,column);	 //从指定地址读出数据写到液晶屏指定（page,column)座标中
 			i += 2;
 			column += 16;
 		}
@@ -319,7 +349,7 @@ void display_GB2312_string(uint8_t page, uint8_t column, uint8_t *text)
 			fontaddr = (unsigned long)(fontaddr * 16);
 			fontaddr = (unsigned long)(fontaddr + 0x3cf80);
 
-			get_and_write_8x16(fontaddr, page, column);	 //从指定地址读出数据写到液晶屏指定（page,column)座标中
+			get_and_write_8x16(fontaddr, page, reverse, column);	 //从指定地址读出数据写到液晶屏指定（page,column)座标中
 			i += 1;
 			column += 8;
 		}
